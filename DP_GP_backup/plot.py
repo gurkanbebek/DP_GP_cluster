@@ -13,8 +13,6 @@ import scipy.cluster.hierarchy as sch
 import numpy as np
 import collections
 import GPy
-from scipy.spatial.distance import squareform
-
 
 def adjust_spines(ax, spines):
     ''' 
@@ -77,8 +75,6 @@ def plot_cluster_gene_expression(clusters, gene_expression_matrix, t, t_labels, 
     for c, IDs in enumerate(IDs_split):
         fig = plt.figure(num=None, figsize=(8,12), dpi=300, facecolor='w', edgecolor='k') #figsize=(12,8),
         for i, ID in enumerate(IDs):
-            total_rows = int(total_rows)
-            total_cols = int(total_cols)
             ax = fig.add_subplot(total_rows, total_cols, i+1)
             # create a range of values at which to evaluate the covariance function
             Xgrid = np.vstack(np.linspace(min(t), max(t), num=500))
@@ -93,13 +89,10 @@ def plot_cluster_gene_expression(clusters, gene_expression_matrix, t, t_labels, 
             
             # plot an x-axis at zero
             plt.axhline(0, color='black', ls='--', alpha=0.5)
-
             # plot the expression of each gene in the cluster
             for gene in list(clusters[ID].members):
-                # python2.7: ax.plot(t, np.array(gene_expression_matrix.loc[gene]), color='red', alpha=0.1)
-                gene_label = gene_expression_matrix.index[gene]
-                ax.plot(t, np.array(gene_expression_matrix.loc[gene_label]), color='red', alpha=0.1)
-
+                ax.plot(t, np.array(gene_expression_matrix.ix[gene]), color='red', alpha=0.1)
+            
             # plot mean expression of cluster
             ax.plot(Xgrid, mu, color='blue')
             # create legend
@@ -151,14 +144,13 @@ def plot_similarity_matrix(sim_mat, output_path_prefix, plot_types):
     
     '''
     dist_mat = 1 - sim_mat
-    condensed_dist = squareform(dist_mat)
-
+    
     sch.set_link_color_palette(['black'])
     
     # Compute and plot left dendrogram.
     fig = plt.figure(figsize=(8,8))
     ax1 = fig.add_axes([0,0.02,0.2,0.6])
-    Y = sch.linkage(condensed_dist, method='complete')
+    Y = sch.linkage(dist_mat, method='complete')
     # color_threshold=np.inf makes dendrogram black
     Z = sch.dendrogram(Y, orientation='left', link_color_func=lambda x: 'black' ) 
     ax1.set_xticks([])
