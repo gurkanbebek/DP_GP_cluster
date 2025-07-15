@@ -15,9 +15,9 @@ DP_GP_cluster requires the following Python packages:
     
     GPy, pandas, numpy, scipy (>= 0.14), matplotlib.pyplot
 
-It has been tested in linux with Python 2.7 and with Anaconda distributions of the latter four above packages.
+It has been tested on Linux with Python 3.9.18 and with Python distributions of the aforementioned four packages.
 
-Download source code and uncompress, then:
+Download the source code and uncompress it, then:
 
     python setup.py install
 
